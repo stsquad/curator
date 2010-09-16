@@ -3,9 +3,9 @@
 # Set, Testing variant
 #
 
-from set import set
+from photo_set import photo_set
 
-class test_set(set):
+class test_set(photo_set):
     """
     A virtual test set for unit testing, no real world uses
     >>> x = test_set("test")
@@ -18,14 +18,14 @@ class test_set(set):
         Creates a set object for a given URI source. If the class is capable of
         handling the URI it will return an instantied object, otherwise None
         >>> x=test_set("test")
-        >>> x
+        >>> x==None
         False
         >>> x=test_set("flibble")
         >>> x==None
         True
         """
         if uri.startswith("test"):
-            obj = set.__new__(cls)
+            obj = super(test_set, cls).__new__(cls)
             return obj
         else:
             return None
@@ -36,7 +36,7 @@ class test_set(set):
 # Unit Tests
 if __name__ == "__main__":
     import sys
-    if len(sys.argv)>1:
+    if len(sys.argv)>1 and not sys.argv[1].startswith("-v"):
         for a in sys.argv[1:]:
             print "Creating test_set: "+a
             pset = test_set(a)
