@@ -9,47 +9,46 @@
 
 import sys,os
 import getopt
-import re
-import xml.etree.ElementTree
+from set_factory import create_set
 
-import flickrapi
-
+verbose=0
 me=os.path.basename(sys.argv[0])
 
-#Secret: e377d23130b29828
-flickr_api_app_id="aveh_wzV34EyLrQovnSYnRxAUZPisqj30BJGWhoLfqSDIQ75nW4VvspQm1cbGaoelwE-"
-flickr_api_keys="2e99f9f42e759029f540360a36647abd"
-#flickr_api_keys=0x2e99f9f42e759029f540360a36647abd
-flickr = flickrapi.FlickrAPI(flickr_api_keys)
+all_photosets=[]
 
 def usage():
     print "Usage:"
-    print "  " + me + " [options] filename"
+    print "  " + me + " [options] [uri1 [uri2 [uri3...]]]"
     print "  -h, --help:   Display usage test"
     print "  -v, -verbose: Be verbose in output"
 
 # Start of code
 if __name__ == "__main__":
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "f:", ["help", "verbose", "flickr="])
+        opts, args = getopt.getopt(sys.argv[1:], "hv", ["help", "verbose"])
     except getopt.GetoptError, err:
         usage()
         
-
-    create_log=None
-
     for o,a in opts:
         if o in ("-h", "--help"):
             usage()
             exit
         if o in ("-v", "--verbose"):
             verbose=1
-        if o in ("-f", "--flickr"):
-            m = re.search("(set-|sets\/)([0-9]{1,})", a);
-            pset = m.group(2)
+        # TODO: handle project saving/loading
+
+
+    # Lets create a set of sets
+    if len(args)>0:
+        for uri in args:
+            pset=create_set(uri)
             if pset:
-                print "Fetching set:"+pset
-                sets = flickr.photosets_getInfo(photoset_id=pset)
-                xml.etree.ElementTree.dump(sets)
+                if verbose:
+                    print "Created: "+str(pset)
+                all_photosets.append(pset)
+
+    # We have sets to deal with now
+    if verbose:
+        print "Project using %d photo sets" % (len(all_photosets))
         
 
