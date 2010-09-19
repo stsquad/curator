@@ -28,6 +28,9 @@ class photo_set(object):
         """
         return "Generic Photoset: %s (%d photos)" % (self.uri, len(self.photos))
 
+    def __repr__(self):
+        return "photo_set(%s) (uri:%s, photos:%d)" % (self.__name__, self.uri, len(self.photos))
+    
     def add_photo(self, photo):
         """
         Add a photo to the internal photos list
