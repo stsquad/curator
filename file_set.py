@@ -2,7 +2,6 @@
 #
 # Represents a set of photos as stored on the file-system
 
-#import path from os
 from os import path,listdir
 from photo_set import photo_set
 from photo import photo
