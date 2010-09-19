@@ -1,0 +1,17 @@
+This is the source code for Curator, an open-source meta-album
+generator.
+
+History
+=======
+
+When I got married I crowd-sourced the photography for my wedding.
+However typically this gives you a large number of desperate wedding
+albums hosted on various photo sharing sites and of varying quality.
+
+I wrote this tool as a way of creating a new album from a selection of
+the pictures posted by my friends. It's intended to be meta-data
+friendly (using exif data) so a nicely formatted "official" album can
+be made from these multiple sources while keeping decent attribution
+and link-backs to the original source.
+
+Alex Bennée, 19/09/2010
