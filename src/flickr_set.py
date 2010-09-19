@@ -3,7 +3,6 @@
 # Represents a set of photos as stored on the Flickr photo sharing site
 
 import sys
-from os import path,listdir
 import re
 
 from photo_set import photo_set
