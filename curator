@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# Stub file to run curator from the development directory
+# No idea if I'll need magic when it's packaged.
+#
+
+DIR=`pwd`
+SRC_TREE=${DIR}/src
+
+if [ -d ${SRC_TREE} ]; then
+    BIN=${SRC_TREE}/curator.py
+    if [ -f ${BIN} ]; then
+	${BIN} $@
+    else
+	echo "Cannot find ${BIN}"
+    fi
+else
+    echo "Cannot find src directory: ${SRC_TREE}"
+fi
+    
+   
