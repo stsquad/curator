@@ -33,15 +33,11 @@ class cache():
         if os.path.exists(file_path):
             print "Overwritting: "+file_path
         xml_tree.write(file_path)
-        
-        return
 
     def load_xml(self, name):
         file_path=self.path+"/"+name
         if not os.path.exists(file_path):
-            print "Couldn't find cached: "+file_path
             return None
         else:
-            xml_tree=ElementTree(file=file_path)
-            return xml_tree
+            return ElementTree(file=file_path)
     
