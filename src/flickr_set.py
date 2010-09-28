@@ -13,7 +13,7 @@ from cache import cache
 from xml.etree.ElementTree import ElementTree
 import flickrapi
 
-verbose=True
+verbose=False
 
 #Secret: e377d23130b29828
 flickr_api_app_id="aveh_wzV34EyLrQovnSYnRxAUZPisqj30BJGWhoLfqSDIQ75nW4VvspQm1cbGaoelwE-"
@@ -68,6 +68,7 @@ class flickr_set(photo_set):
         m = re.search("(set-|sets\/)([0-9]{1,})", uri);
         pset=m.group(2)
         if pset:
+            if verbose: print "Handling flickr set: "+pset
             self.flickr_setid=pset
             self.cache = cache("flickr_"+str(self.flickr_setid))
             ps_info=self._getInfo()
@@ -77,6 +78,9 @@ class flickr_set(photo_set):
                 self.set_size=ps.attrib['photos']
                 self.title=ps.find("title").text
                 self.desc=ps.find("description").text
+
+                # and then the photos themselves
+                photo_info=self._getPhotos()
         else:
             print "flickr_set: unable to extract set ID from URI:"+uri
 
@@ -86,9 +90,11 @@ class flickr_set(photo_set):
         """
         self.info=None
         try:
-            info=flickr.photosets_getInfo(photoset_id=self.flickr_setid)
-            self.info=ElementTree(info)
+            result=flickr.photosets_getInfo(photoset_id=self.flickr_setid)
+            if verbose: print "_getInfo: result="+str(result)
+            etree=ElementTree(result)
             self.cache.save_xml("getInfo", etree)
+            self.info=etree
         except IOError:
             # most likey can't talk to net, try the cache
             self.info = self.cache.load_xml("getInfo")
@@ -97,7 +103,25 @@ class flickr_set(photo_set):
             raise sys.exc_type
 
         return self.info
-        
+
+    def _getPhotos(self):
+        """
+        Get a list of photos in the set
+        """
+        self.photo_info=None
+        try:
+            result=flickr.photosets_getPhotos(photoset_id=self.flickr_setid, extras="date_taken")
+            etree=ElementTree(result)
+            self.cache.save_xml("getPhotos", etree)
+            self.photo_info=etree
+        except IOError:
+            # most likey can't talk to net, try the cache
+            self.photo_info=self.cache.load_xml("getPhotos")
+        except:
+            print "flickr_set: Unhandled exception ", sys.exc_type
+            raise sys.exc_type
+
+        return self.photo_info
 
     def __str__(self):
         """
@@ -115,8 +139,18 @@ class flickr_set(photo_set):
 # Unit Tests
 if __name__ == "__main__":
     import sys
-    if len(sys.argv)>1 and not sys.argv[1].startswith("-v"):
-        for a in sys.argv[1:]:
+    import getopt
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "hv", ["help", "verbose"])
+    except getopt.GetoptError, err:
+        print "Bad options"
+        
+    if len(args)>0:
+       for o,a in opts:
+           if o in ("-v", "--verbose"):
+               verbose=True
+   
+       for a in args:
             print "Creating flickr_set: "+a
             pset = flickr_set(a)
             if pset:
