@@ -28,6 +28,10 @@ class cache():
         else:
             os.makedirs(self.path)
 
+    def _get_path(self, name):
+        return self.path+"/"+name
+        
+
     def save_xml(self, name, xml_tree):
         file_path=self.path+"/"+name
         if os.path.exists(file_path):
@@ -40,4 +44,17 @@ class cache():
             return None
         else:
             return ElementTree(file=file_path)
+
+    def return_file_path(self, name):
+        file_path = self.path+"/"+name
+        if not os.path.exists(file_path):
+            return None
+        else:
+            return file_path
+
+    def write_file(self, file_path, data):
+        f = open(file_path, "bw+")
+        f.write(data)
+        
+        
     

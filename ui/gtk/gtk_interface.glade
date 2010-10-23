@@ -162,7 +162,6 @@
         </child>
         <child>
           <object class="GtkHPaned" id="hpaned1">
-            <property name="width_request">120</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="tooltip_text" translatable="yes">Sets</property>
@@ -173,14 +172,13 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="has_tooltip">True</property>
-                <property name="tooltip_text" translatable="yes">icon view set</property>
                 <property name="model">setlist_store</property>
                 <property name="columns">2</property>
                 <property name="item_width">72</property>
               </object>
               <packing>
-                <property name="resize">False</property>
-                <property name="shrink">True</property>
+                <property name="resize">True</property>
+                <property name="shrink">False</property>
               </packing>
             </child>
             <child>
@@ -208,9 +206,15 @@
   <object class="GtkListStore" id="setlist_store">
     <columns>
       <!-- column-name name -->
-      <column type="gchar"/>
-      <!-- column-name icon -->
+      <column type="gchararray"/>
+      <!-- column-name GdkPixbuf1 -->
       <column type="GdkPixbuf"/>
     </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes"/>
+        <col id="1"/>
+      </row>
+    </data>
   </object>
 </interface>

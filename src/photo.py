@@ -2,7 +2,7 @@
 #
 # Represents an individual photo in a set. 
 
-class photo():
+class photo(object):
     """
     While the photo class holds paths to cached photos and thumbnails it
     doesn't hold any awareness of where they came from. This is left to the

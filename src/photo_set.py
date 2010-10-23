@@ -53,7 +53,7 @@ class photo_set(object):
         '/home/alex/mysrc/curator.git/ui/icons/feed.png'
         """
         if len(self.photos)>0:
-            return self.get_photo(0)
+            return self.get_photo(0).get_icon_file_name()
         else:
             return "/home/alex/mysrc/curator.git/ui/icons/feed.png"
         

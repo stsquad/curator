@@ -6,7 +6,7 @@ import sys
 import re
 
 from photo_set import photo_set
-from photo import photo
+from flickr_photo import flickr_photo
 from cache import cache
 
 # For flickrapi
@@ -64,6 +64,7 @@ class flickr_set(photo_set):
         Flickr based Photoset: http://www.flickr.com/photos/someone/sets/12345678/with/10111213 (0 photos)
         """
         super(self.__class__, self).__init__(uri)
+        self.flickr = flickr
 
         m = re.search("(set-|sets\/)([0-9]{1,})", uri);
         pset=m.group(2)
@@ -81,6 +82,9 @@ class flickr_set(photo_set):
 
                 # and then the photos themselves
                 photo_info=self._getPhotos()
+                for p in photo_info.findall("photoset/photo"):
+                    self.photos.append(flickr_photo(flickr, p, self.cache))
+                
         else:
             print "flickr_set: unable to extract set ID from URI:"+uri
 
@@ -135,6 +139,7 @@ class flickr_set(photo_set):
             string=string+self.set_size+"/"
         string=string+str(len(self.photos))+" photos)"
         return string
+
 
 # Unit Tests
 if __name__ == "__main__":
