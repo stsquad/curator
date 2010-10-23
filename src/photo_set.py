@@ -29,7 +29,7 @@ class photo_set(object):
         return "Generic Photoset: %s (%d photos)" % (self.uri, len(self.photos))
 
     def __repr__(self):
-        return "photo_set(%s) (uri:%s, photos:%d)" % (self.__name__, self.uri, len(self.photos))
+        return "photo_set(%s) (uri:%s, photos:%d)" % (self.__class__, self.uri, len(self.photos))
     
     def add_photo(self, photo):
         """
@@ -42,6 +42,21 @@ class photo_set(object):
         Generic Photoset: test (1 photos)
         """
         self.photos.append(photo)
+
+    def get_photo(self, index):
+        return self.photos[index]
+
+    def get_icon_file(self):
+        """
+        >>> x=photo_set("")
+        >>> x.get_icon_file()
+        '/home/alex/mysrc/curator.git/ui/icons/feed.png'
+        """
+        if len(self.photos)>0:
+            return self.get_photo(0)
+        else:
+            return "/home/alex/mysrc/curator.git/ui/icons/feed.png"
+        
         
 
 # Unit Tests
