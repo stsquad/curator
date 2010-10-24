@@ -52,9 +52,11 @@ class cache():
         else:
             return file_path
 
-    def write_file(self, file_path, data):
-        f = open(file_path, "bw+")
+    def write_file(self, file_name, data):
+        file_path = self._get_path(file_name)
+        f = open(file_path, "wb+")
         f.write(data)
+        return file_path
         
         
     
