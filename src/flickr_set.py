@@ -140,6 +140,10 @@ class flickr_set(photo_set):
         string=string+str(len(self.photos))+" photos)"
         return string
 
+    def get_album_name(self):
+        return self.desc
+
+
 
 # Unit Tests
 if __name__ == "__main__":

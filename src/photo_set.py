@@ -59,6 +59,9 @@ class photo_set(object):
             return file
         else:
             return "/home/alex/mysrc/curator.git/ui/icons/feed.png"
+
+    def get_album_name(self):
+        return str(self)
         
         
 
