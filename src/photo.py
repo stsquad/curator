@@ -37,7 +37,10 @@ class photo(object):
         /path/to/photo
         """
         return str(self.id)
-    
+
+    def get_icon_file_name(self):
+        return None
+
 
 
 # Unit Tests
