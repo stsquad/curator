@@ -55,9 +55,10 @@ class flickr_photo(photo):
         file_name = "flickr_icon_"+str(self.id)+".jpg"
         file_path = self.cache.return_file_path(file_name)
         if file_path:
+            print "flickr_photo: cached %s" % (file_name)
             return file_path
         else:
-            print "gifn: Downloading a thumbnail to: %s" % (file_name)
+            print "flickr_photo: downloading %d" % (self.id)
             sizes = self._getSizes()
 
             for el in sizes:
