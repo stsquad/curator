@@ -20,7 +20,7 @@ def store_set_info(pset):
     item = []
 
     # name
-    item.append(pset.__str__())
+    item.append(pset.get_album_name())
 
     #icon
     pb = gtk.gdk.pixbuf_new_from_file(pset.get_icon_file())
@@ -45,9 +45,6 @@ class GUI(object):
       self.window1.show()
 
       self.set_icons = builder.get_object("set_icons")
-#      self.set_icons.set_pixbuf_column(1)
-#      self.set_icons.set_markup_column(2)
-
       self.setlist_store = builder.get_object("setlist_store")
 
       # populate the set icons
@@ -56,6 +53,8 @@ class GUI(object):
               print "Adding: %s to model" % (s)
               self.setlist_store.append(store_set_info(s))
 
+      self.set_icons.set_text_column(0)
+      self.set_icons.set_pixbuf_column(1)
 
               
               
