@@ -10,9 +10,8 @@
     </accel-groups>
     <signal name="destroy_event" handler="on_main_window_destroy_event"/>
     <child>
-      <object class="GtkVPaned" id="vpaned1">
+      <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
-        <property name="can_focus">True</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkMenuBar" id="menubar1">
@@ -158,38 +157,31 @@
             </child>
           </object>
           <packing>
-            <property name="resize">False</property>
-            <property name="shrink">True</property>
+            <property name="expand">False</property>
+            <property name="position">0</property>
           </packing>
         </child>
         <child>
-          <object class="GtkHPaned" id="hpaned1">
+          <object class="GtkHPaned" id="main_panes">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="position_set">True</property>
             <child>
               <object class="GtkIconView" id="set_icons">
                 <property name="width_request">64</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="has_tooltip">True</property>
-                <property name="tooltip_text" translatable="yes">set_icons</property>
-                <property name="orientation">horizontal</property>
                 <property name="model">setlist_store</property>
-                <property name="columns">2</property>
-                <property name="item_width">40</property>
               </object>
               <packing>
-                <property name="resize">True</property>
+                <property name="resize">False</property>
                 <property name="shrink">True</property>
               </packing>
             </child>
             <child>
               <object class="GtkIconView" id="photo_icons">
-                <property name="width_request">680</property>
+                <property name="width_request">640</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="tooltip_text" translatable="yes">photo icons</property>
                 <property name="model">photolist_store</property>
               </object>
               <packing>
@@ -199,8 +191,7 @@
             </child>
           </object>
           <packing>
-            <property name="resize">True</property>
-            <property name="shrink">True</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </object>
