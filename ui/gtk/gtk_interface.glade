@@ -3,14 +3,15 @@
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkIconFactory" id="iconfactory1"/>
-  <object class="GtkWindow" id="window1">
+  <object class="GtkWindow" id="main_window">
     <property name="visible">True</property>
     <accel-groups>
       <group name="accelgroup1"/>
     </accel-groups>
+    <signal name="destroy_event" handler="on_main_window_destroy_event"/>
     <child>
       <object class="GtkVPaned" id="vpaned1">
-        <property name="sensitive">False</property>
+        <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="orientation">vertical</property>
         <child>
@@ -66,12 +67,13 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem5">
+                      <object class="GtkImageMenuItem" id="menu_quit">
                         <property name="label">gtk-quit</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <property name="accel_group">accelgroup1</property>
+                        <signal name="activate" handler="on_menu_quit_activate"/>
                       </object>
                     </child>
                   </object>

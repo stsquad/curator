@@ -54,8 +54,8 @@ class GUI(object):
       builder.add_from_file(glade_file)
       
       builder.connect_signals(self)
-      self.window1 = builder.get_object("window1")
-      self.window1.show()
+      self.main_window = builder.get_object("main_window")
+      self.main_window.show()
 
       self.set_icons = builder.get_object("set_icons")
       self.set_icons.set_text_column(0)
@@ -97,11 +97,13 @@ class GUI(object):
   def shutdown_gui(self):
       print "shutdown_gui"
       self.end_event.set()
-      print "current threads: "+str(Threading.enumerate())
-      
+      gtk.main_quit()
 
-  def on_window1_destroy(self,widget,data=None):
-      shutdown_gui()
+  def on_main_window_destroy_event(self,widget,data=None):
+      self.shutdown_gui()
+
+  def on_menu_quit_activate(self, widget, data=None):
+      self.shutdown_gui()
       
   def on_button1_clicked(self,widget,data=None):
       shutdown_gui()
