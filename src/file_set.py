@@ -68,7 +68,7 @@ class file_set(photo_set):
         >>> fs._file_is_image(bad)
         False
         """
-        if path.endswith("jpg"):
+        if path.endswith("jpg") or path.endswith("JPG"):
             return True
 
         # fall-through
