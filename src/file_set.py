@@ -7,6 +7,9 @@ from photo_set import photo_set
 from photo import photo
 
 
+# for testing
+testing_root_path=None
+
 class file_set(photo_set):
     """
     A photoset that lives on the file system in a directory structure
@@ -18,10 +21,10 @@ class file_set(photo_set):
         does not exist then the class will not instantiate.
 
         Appologies for hardwired paths in the test, this could be neater
-        >>> x=file_set("/usr/share/images/desktop-base/")
+        >>> x=file_set(testing_root_path+'/test_album1')
         >>> x==None
         False
-        >>> x=file_set("/dev/null")
+        >>> x=file_set('/dev/null')
         >>> x==None
         True
         """
@@ -36,11 +39,11 @@ class file_set(photo_set):
         """
         Initialise the object with number of files
 
-        >>> fs=file_set("./tests/test_album1")
+        >>> fs=file_set('tests/test_album1')
         >>> fs==None
         False
         >>> print fs
-        File based Photoset: ./tests/test_album1 (3 photos)
+        File based Photoset: tests/test_album1 (4 photos)
         """
         super(file_set, self).__init__(uri)
         self.absolute_path = path.abspath(uri)
@@ -53,17 +56,15 @@ class file_set(photo_set):
     def _file_is_image(self, path):
         """
         Check if a given file is a valid image
-        >>> import os
-        >>> p = os.getcwd()
-        >>> ta = p+"/tests/test_album1"
+        >>> ta = testing_root_path+'/test_album1'
         >>> fs = file_set(ta)
         >>> fs == None
         False
         >>> fs = file_set(ta)
-        >>> ok = ta+"/new_context.jpg"
+        >>> ok = ta+'/test_album1/new_head.jpg'
         >>> fs._file_is_image(ok)
         True
-        >>> bad = p+"/file_set.py"
+        >>> bad = testing_root_path+'/../curator'
         >>> fs._file_is_image(bad)
         False
         """
@@ -95,5 +96,7 @@ if __name__ == "__main__":
                 print "  nothing created"
     else:
         import doctest
+        import os
+        testing_root_path = os.path.abspath(os.path.dirname(__file__)+"/../tests")
         doctest.testmod()    
 
