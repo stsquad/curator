@@ -6,11 +6,18 @@
 
 DIR=`pwd`
 SRC_TREE=${DIR}/src
+GUI_TREE=${DIR}/ui/gtk
+
+if [ -d ${GUI_TREE} ]; then
+    export PYTHONPATH=${GUI_TREE}
+    echo "PYTHONPATH=${PYTHONPATH}"
+fi
+
 
 if [ -d ${SRC_TREE} ]; then
     BIN=${SRC_TREE}/curator.py
     if [ -f ${BIN} ]; then
-	${BIN} $@
+	${BIN} "$@"
     else
 	echo "Cannot find ${BIN}"
     fi
