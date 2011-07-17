@@ -19,97 +19,74 @@ class GUI:
         self.basepath = basepath
         self.verbose = verbose
         self.control = controller
-        
-        
-        #create a clutter stage
+
+        # Setup the Stage
         self.stage = clutter.Stage()
-        #set the stage size in x,y pixels
-        self.stage.set_size(500,200)
-        #define some clutter colors in rgbo (red,green,blue,opacity)
-        color_black =clutter.Color(0,0,0,255) 
-        color_green =clutter.Color(0,255,0,255)
-        color_blue =clutter.Color(0,0,255,255)
-        #set the clutter stages bg color to our black
-        self.stage.set_color(color_black)
-        #we will need to check on the key presses from the user
-        self.stage.connect('key-press-event', self.parseKeyPress)
-        #create a clutter label, is there documentation for creating a clutterlabel?
-        self.label = clutter.Label()
-        #set the labels font
-        self.label.set_font_name('Mono 32')
-        #add some text to the label
-        self.label.set_text("Hello")
-        #make the label green
-        self.label.set_color(color_green )
-        #put the label in the center of the stage
-        (label_width, label_height) = self.label.get_size()
-        label_x = (self.stage.get_width()/2) - label_width/2
-        label_y = (self.stage.get_height()/2) - label_height/2
-        self.label.set_position(label_x, label_y)
-        #make a second label similar to the first label
-        self.label2 = clutter.Label()
-        self.label2.set_font_name('Mono 32')
-        self.label2.set_text("World!")
-        self.label2.set_color(color_blue )
-        (label2_width, label2_height) = self.label2.get_size()
-        label2_x = (self.stage.get_width()/2) - label2_width/2
-        label2_y = (self.stage.get_height()/2) - label2_height/2
-        self.label2.set_position(label2_x, label2_y)
-        #hide the label2 
-        self.label2.set_opacity(0)
-        #create a timeline for the animations that are going to happen
-        self.timeline = clutter.Timeline(500)
-        #how will the animation flow? ease in? ease out? or steady?
-        #ramp_inc_func will make the animation steady
-#        labelalpha = clutter.Alpha(self.timeline, clutter.ramp_inc_func)
-        #make some opacity behaviours that we will apply to the labels
-#        self.hideBehaviour = clutter.BehaviourOpacity(255,0x00,labelalpha)
-#        self.showBehaviour = clutter.BehaviourOpacity(0x00,255,labelalpha)
-        #add the items to the stage
-        self.stage.add(self.label2)
-        self.stage.add(self.label)
-        #show all stage items and enter the clutter main loop
+        self.stage.set_size(500,400)
+        self.stage.set_color(clutter.Color(0,0,0,255))
+        self.stage.set_user_resizable(True)
+
+        # Setup something to handle GUI events
+        self.stage.connect('destroy', self.shutdown_gui)
+        self.stage.connect('key-press-event', self.parse_keys)
+        self.stage.connect('allocation-changed', self.on_stage_resize)
+
+        # Define the two panes within one layout
+        system_layout = clutter.FlowLayout(clutter.FLOW_VERTICAL)
+        system_layout.set_homogeneous(False)
+        self.main_pane = clutter.Box(system_layout)
+        self.stage.add(self.main_pane)
+        
+        album_layout = clutter.FlowLayout(clutter.FLOW_VERTICAL)
+        album_layout.set_homogeneous(True)
+        album_layout.set_column_spacing(10)
+        album_layout.set_row_spacing(20)
+
+        self.album_pane = clutter.Box(album_layout)
+        self.album_pane.set_color(clutter.Color(20,20,20,200))
+        self.album_pane.set_name('albums')
+        self.album_pane.set_size(100, -1)
+        self.main_pane.add(self.album_pane)
+
+        preview_layout = clutter.FlowLayout(clutter.FLOW_HORIZONTAL)
+        preview_layout.set_homogeneous(True)
+        preview_layout.set_column_spacing(20)
+        preview_layout.set_row_spacing(20)
+
+        self.preview_pane = clutter.Box(preview_layout)
+        self.preview_pane.set_color(clutter.Color(0,0,0,200))
+        self.preview_pane.set_name('previews')
+        self.preview_pane.set_size(-1, -1)
+        self.main_pane.add(self.preview_pane)
+        
+
+        # Fill the stage with preview icons and display
+        self.populate_preview()
         self.stage.show_all()
         
-    def parseKeyPress(self,actor, event):
+    def populate_preview(self):
+        sets = self.control.get_sets()
+        for s in sets:
+            for p in s.photos:
+                tex = clutter.Texture()
+                tex.set_from_file(p.get_icon_file_name())
+                self.preview_pane.add(tex)
+
+
+    def parse_keys(self, actor, event):
         #do stuff when the user presses a key
         #it would be awesome if I could find some documentation regarding clutter.keysyms
         if event.keyval == clutter.keysyms.q:
             #if the user pressed "q" quit the test
             clutter.main_quit()
-        elif event.keyval == clutter.keysyms.s:
-            #if the user pressed "s" swap the labels
-            self.swapLabels()
+
+    def on_stage_resize(self, actor, allocation, flags):
+        width, height = allocation.size
+        self.album_pane.set_width(100)
+        self.album_pane.set_height(height)
+        self.preview_pane.set_width(width-100)
+        self.preview_pane.set_height(height)
             
-    
-    def swapLabels(self):   
-        #which label is at full opacity?, like the highlander, there can be only one
-        if(self.label.get_opacity()>1 ):
-            showing = self.label
-            hidden = self.label2
-        else:
-            showing = self.label2
-            hidden = self.label
-        #detach all objects from the behaviors
-        self.hideBehaviour.remove_all()
-        self.showBehaviour.remove_all()
-        #apply the behaviors to the labels
-        self.hideBehaviour.apply(showing)
-        self.showBehaviour.apply(hidden)
-        #behaviours do nothing if their timelines are not running
-        self.timeline.start()
-
-    def populate_preview(self):
-        sets = control.get_sets()
-        for s in sets:
-            for p in s.photos:
-                if self.end_event.is_set():
-                    print "caught a termination event"
-                else:
-                    print "do something here"
-#                  info = store_photo_info(p)
-#                  gobject.idle_add(self.add_preview_icon, info)
-
 
     def run(self):
         print "entering the GUI run loop"
