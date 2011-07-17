@@ -9,16 +9,19 @@
 
 import sys,os
 import getopt
-import gtk
 
-from set_factory import create_set
-from gui import start_gui
+from controller import controller
 
-verbose=0
+# For verbosity
+verbose=False
+verbose_level=0
+
+# GUI
+gui_mode="clutter"
+
 me=os.path.basename(sys.argv[0])
 gui=None
 
-all_photosets=[]
 
 def usage():
     print "Usage:"
@@ -28,18 +31,17 @@ def usage():
 
 
 def start_curator(args):
+    # We need a controller
+    control = controller(verbose=(verbose_level>1))
+    
     # Lets create a set of sets
     if len(args)>0:
         for uri in args:
-            pset=create_set(uri)
-            if pset:
-                if verbose:
-                    print "Created: "+str(pset)
-                all_photosets.append(pset)
+            control.add_set_by_uri(uri)
 
     # We have sets to deal with now
     if verbose:
-        print "Project using %d photo sets" % (len(all_photosets))
+        print "Project using %d photo sets" % (control.get_set_count())
 
     cwd = os.getcwd()
     if os.path.dirname(sys.argv[0]) == cwd:
@@ -47,24 +49,31 @@ def start_curator(args):
     else:
         bp=cwd
 
-    gui = start_gui(basepath=bp, sets=all_photosets)
-    gtk.main()
+    sys.path.append(bp+"/ui/"+gui_mode)
+    from gui import start_gui
+    gui = start_gui(verbose=(verbose_level>1), basepath=bp, controller=control)
+    gui.run()
     
 
 # Start of code
 if __name__ == "__main__":
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hv", ["help", "verbose"])
+        opts, args = getopt.getopt(sys.argv[1:], "hvgc", ["help", "verbose", "gtk", "clutter"])
     except getopt.GetoptError, err:
         usage()
+        exit (-1)
         
     for o,a in opts:
         if o in ("-h", "--help"):
             usage()
             exit
         if o in ("-v", "--verbose"):
-            verbose=1
-        # TODO: handle project saving/loading
+            verbose=True
+            verbose_level += 1
+        if o in ("-g", "--gtk"):
+            gui_mode="gtk"
+        if o in ("-c", "--clutter"):
+            gui_mode="clutter"
 
     start_curator(args)
 

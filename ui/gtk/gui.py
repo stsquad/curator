@@ -44,7 +44,19 @@ def store_photo_info(photo):
 
 
 class GUI(object):
-  def __init__(self, basepath=None, sets=None):
+  """
+  Class representing the GUI
+  """
+  verbose = False
+  basepath = None
+  control = None
+    
+  def __init__(self, verbose=False, basepath=None, controller=None):
+      # House keeping
+      self.basepath = basepath
+      self.verbose = verbose
+      self.control = controller
+
       builder = gtk.Builder()
 
       glade_file = "ui/gtk/gtk_interface.glade"
@@ -63,6 +75,7 @@ class GUI(object):
 
       # populate the set icons
       self.setlist_store = builder.get_object("setlist_store")
+      sets = self.control.get_sets()
       if sets:
           for s in sets:
               print "Adding: %s to model" % (s)
@@ -115,10 +128,13 @@ class GUI(object):
   def on_open_clicked(self,widget,data=None):
       print "file open"
 
-def start_gui(basepath=None, sets=None):
-    gtk.gdk.threads_init()
-    
-    return GUI(basepath, sets)
+  def run(self):
+      print "entering the GUI run loop"
+      gtk.main()
+
+
+def start_gui(verbose=True, basepath=None, controller=None):
+    return GUI(verbose, basepath, controller)
 
 if __name__ == "__main__":
     start_gui()
