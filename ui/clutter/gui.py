@@ -83,9 +83,7 @@ class GUI:
     def on_stage_resize(self, actor, allocation, flags):
         width, height = allocation.size
         self.album_pane.set_width(100)
-        self.album_pane.set_height(height)
         self.preview_pane.set_width(width-100)
-        self.preview_pane.set_height(height)
             
 
     def run(self):
